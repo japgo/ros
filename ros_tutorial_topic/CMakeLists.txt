@@ -10,6 +10,12 @@ project(ros_tutorial_topic)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  message_generation
+)
+
+add_service_files(
+  FILES
+  AddTwoInts.srv
 )
 
 ## System dependencies are found with CMake's conventions
@@ -53,11 +59,7 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -67,10 +69,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -134,13 +136,6 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(topic_publisher src/topic_publisher.cpp)
 add_executable(topic_subscriber src/topic_subscriber.cpp)
-
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(topic_publisher
@@ -162,6 +157,24 @@ add_dependencies(topic_subscriber
 target_link_libraries(topic_subscriber
   ${catkin_LIBRARIES}
 )
+
+
+
+add_executable(topic_server src/topic_server.cpp)
+target_link_libraries(topic_server ${catkin_LIBRARIES} )
+add_dependencies(topic_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+
+add_executable(topic_client src/topic_client.cpp)
+target_link_libraries(topic_client ${catkin_LIBRARIES} )
+add_dependencies(topic_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
+
+## Rename C++ executable without prefix
+## The above recommended prefix causes long target names, the following renames the
+## target back to the shorter version for ease of user use
+## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
+# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
+
+
 
 #############
 ## Install ##
